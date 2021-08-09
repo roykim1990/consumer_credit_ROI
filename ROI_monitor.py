@@ -1,10 +1,6 @@
-import pandas as pd
-import numpy as np
-
 # modelop.init
 def begin():
-    """A function to declare model-specific variables used in ROI computation
-    """
+    """A function to declare model-specific variables used in ROI computation"""
     global amount_field, label_field, score_field
     global baseline_metrics, cost_multipliers
 
@@ -13,7 +9,7 @@ def begin():
     score_field = "score"  # Column containing model prediction
 
     # Classification metrics on baseline data
-    baseline_metrics = {"TPR": 0.4, "FPR": 0.1, "TNR": 0.2, "FNR": 0.3}
+    baseline_metrics = {"TPR": 0.033, "FPR": 0.1, "TNR": 0.766, "FNR": 0.101}
 
     # ROI cost multipliers for each classification case
     cost_multipliers = {
@@ -47,12 +43,12 @@ def metrics(df_sample):
         else:
             df_sample["record_class"] = "FP"
 
-    actual_ROI = compute_actual_ROI(df_sample)
-    projected_ROI = None
+    actual_roi = compute_actual_roi(df_sample)
+    projected_roi = None
 
     yield {
-        "actual_ROI": actual_ROI,
-        "projected_ROI": projected_ROI,
+        "actual_roi": actual_roi,
+        "projected_roi": projected_roi,
         "amount_field": amount_field,
         "ROI": [
             {
@@ -61,8 +57,8 @@ def metrics(df_sample):
                 "test_type": "ROI",
                 "test_id": "ROI",
                 "values": {
-                    "actual_ROI": actual_ROI,
-                    "projected_ROI": projected_ROI,
+                    "actual_roi": actual_roi,
+                    "projected_roi": projected_roi,
                     "amount_field": amount_field,
                     "baseline_metrics": baseline_metrics,
                     "cost_multipliers": cost_multipliers,
@@ -72,7 +68,7 @@ def metrics(df_sample):
     }
 
 
-def compute_actual_ROI(data):
+def compute_actual_roi(data):
     """Helper function to compute actual ROI.
 
     Args:
@@ -81,11 +77,11 @@ def compute_actual_ROI(data):
     Returns:
         float: actual ROI
     """
-    actual_ROI = 0
+    actual_roi = 0
     for idx in range(len(data)):
-        actual_ROI += (
+        actual_roi += (
             data.iloc[idx][amount_field]
             * cost_multipliers[data.iloc[idx]["record_class"]]
         )
 
-    return actual_ROI
+    return round(actual_roi, 2)
