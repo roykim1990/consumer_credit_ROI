@@ -2,7 +2,7 @@
 {
     "tags": [],
     "name": "Return on Investments Monitor",
-    "description": "Model to Compute Actual ROI for the Consumer Credit Model",
+    "description": "Model to Compute Actual & Projected ROI for the Consumer Credit Model",
     "modelCategory": "MODEL_MONITORING_MODEL",
     "defaultAssociationRole": "PERFORMANCE_MODEL",
     "frequentlyUsed": true,
