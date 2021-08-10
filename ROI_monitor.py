@@ -9,8 +9,10 @@ def begin():
     score_field = "score"  # Column containing model prediction
 
     # Classification metrics on baseline data
-    baseline_metrics = {"TPR": 0.033, "FPR": 0.1, "TNR": 0.766, "FNR": 0.101}
-
+    baseline_metrics = {
+        "TNR": 0.8840906105136723,
+        "TPR": 0.2435474006116208,
+    }
     # ROI cost multipliers for each classification case
     cost_multipliers = {
         "TP": 2,
@@ -33,18 +35,22 @@ def metrics(df_sample):
     """
 
     # Classify each record in dataframe
+    # Positive Class Labeled as 1
+    # Negative Class labeled as 0
+
     for idx in range(len(df_sample)):
         if df_sample.iloc[idx][label_field] == df_sample.iloc[idx][score_field]:
             df_sample["record_class"] = (
-                "TP" if df_sample.iloc[idx][label_field] == 0 else "TN"
+                "TP" if df_sample.iloc[idx][label_field] == 1 else "TN"
             )
         elif df_sample.iloc[idx][label_field] < df_sample.iloc[idx][score_field]:
-            df_sample["record_class"] = "FN"
-        else:
             df_sample["record_class"] = "FP"
+        else:
+            df_sample["record_class"] = "FN"
 
+    # Compute actual and projected ROIs
     actual_roi = compute_actual_roi(df_sample)
-    projected_roi = None
+    projected_roi = compute_projected_roi(df_sample)
 
     yield {
         "actual_roi": actual_roi,
@@ -85,3 +91,30 @@ def compute_actual_roi(data):
         )
 
     return round(actual_roi, 2)
+
+
+def compute_projected_roi(data):
+    """Helper function to compute projected ROI.
+
+    Args:
+        data (pd.DataFrame): Input DataFrame containing record_class
+
+    Returns:
+        float: projected ROI
+    """
+    projected_roi = 0
+    for idx in range(len(data)):
+        projected_roi += data.iloc[idx][amount_field] * (
+            (data.iloc[idx][score_field] == 1)
+            * (
+                baseline_metrics["TPR"] * cost_multipliers["TP"]
+                + (1 - baseline_metrics["TPR"] * cost_multipliers["FP"])
+            )
+            + (data.iloc[idx][score_field] == 0)
+            * (
+                baseline_metrics["TNR"] * cost_multipliers["TN"]
+                + (1 - baseline_metrics["TNR"] * cost_multipliers["FN"])
+            )
+        )
+
+    return round(projected_roi, 2)
