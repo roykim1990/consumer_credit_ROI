@@ -15,10 +15,10 @@ def begin():
     }
     # ROI cost multipliers for each classification case
     cost_multipliers = {
-        "TP": 2,
-        "FP": -1.5,
-        "TN": 1.5,
-        "FN": -2,
+        "TP": 1.5,
+        "FP": -2,
+        "TN": 2,
+        "FN": -1.5,
     }
     pass
 
