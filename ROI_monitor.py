@@ -11,7 +11,8 @@ def begin():
     # Classification metrics on baseline data
     baseline_metrics = {
         "TNR": 0.8840906105136723,
-        "TPR": 0.2435474006116208,
+        # changing old TPR value of 0.2435474006116208
+        "TPR": 0.8,
     }
     # ROI cost multipliers for each classification case
     cost_multipliers = {
