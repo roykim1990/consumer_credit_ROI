@@ -4,14 +4,14 @@ def begin():
     global amount_field, label_field, score_field
     global baseline_metrics, cost_multipliers
 
-    amount_field = "loan_amnt"  # Column containing transaction amount
-    label_field = "loan_status"  # Column containing ground_truth
+    amount_field = "credit_amount"  # Column containing transaction amount
+    label_field = "label_value"  # Column containing ground_truth
     score_field = "score"  # Column containing model prediction
 
     # Classification metrics on baseline data
     baseline_metrics = {
-        "TNR": 0.8840906105136723,
-        "TPR": 0.2435474006116208,
+        "TNR": 0.8772321428571429,
+        "TPR": 0.53125,
     }
     # ROI cost multipliers for each classification case
     cost_multipliers = {
